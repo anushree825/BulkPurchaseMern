@@ -45,27 +45,27 @@ export default class CreateUser extends Component {
             role: this.state.role
         }
 
-        axios.post('http://localhost:4000/add', newUser)
-            //.then(res => console.log(res.data));
-            .then(response => {
-                if (response.data === 'Error: User already exists') {
-                    alert("Error: User already exists")
-                }
-                else {
-                    console.log('Registered')
-                }
-                // if (newUser.role == "vendor") {
-                //     this.props.history.push('/vendor')
-                // }
-                // else{
-                //     this.props.history.push('/customer')
-                // }
+        this.data(newUser)
+        //.then(res => console.log(res.data));
+        // .then(response => {
+        //     if (response.data === 'Error: User already exists') {
+        //         alert("Error: User already exists")
+        //     }
+        //     else {
+        //         console.log('Registered')
+        //     }
+        //     // if (newUser.role == "vendor") {
+        //     //     this.props.history.push('/vendor')
+        //     // }
+        //     // else{
+        //     //     this.props.history.push('/customer')
+        //     // }
 
-            })
+        // })
 
-            .catch(err => {
-                console.log(err)
-            })
+        // .catch(err => {
+        //     console.log(err)
+        // })
 
         this.setState({
             username: '',
@@ -73,6 +73,22 @@ export default class CreateUser extends Component {
             password: '',
             role: ''
         });
+    }
+    async data(newUser) {
+        try {
+            const response = await axios.post('http://localhost:4000/add', newUser);
+
+            if (response.data === 'Error: User already exists') {
+                alert("Error: User already exists")
+            }
+            else {
+                console.log('Registered')
+
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     render() {
@@ -108,7 +124,7 @@ export default class CreateUser extends Component {
                         <select name="role" className="form-control"
                             value={this.state.role}
                             onChange={this.onChangeRole}>
-                            <option value="choose" selected >Choose</option>
+                            <option value="choose" selected >Choose from list</option>
                             <option value="vendor">Vendor</option>
                             <option value="customer" defaultValue>Customer</option>
                         </select>

@@ -11,7 +11,7 @@ function App() {
     <Router>
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <Link to="/" className="navbar-brand">App</Link>
+          <Link to="/" className="navbar-brand">Home </Link>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav mr-auto">
               <li className="navbar-item">

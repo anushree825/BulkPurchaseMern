@@ -6,9 +6,9 @@ import UsersList from './components/users-list.component'
 import CreateUser from './components/create-user.component'
 import Login from './components/login.component'
 import Customer from './components/customer.component'
-import Logout from './components/logout.component'
+import Logout from './components/create-user.component'
 
-function Customer() {
+function CustomerApp() {
   return (
     <Router>
       <div className="container">
@@ -34,4 +34,4 @@ function Customer() {
   );
 }
 
-export default Customer;
+export default CustomerApp;

@@ -100,10 +100,8 @@ userRoutes.route('/login').post((req, res) => {
                         expiresIn: 1440
                     })
                     console.log("Successfully logged in")
-                    res.cookie('token', token, { httpOnly: true }).sendStatus(200);
-                    //res.send(token)
+                    res.cookie('token', token, { httpOnly: true }).status(200).send(user.role);  //res.send(token)
                 } else {
-                    // Passwords don't match
                     res.send('Error: Passwords do not match')//status(900).json({ error: 'Passwords do not match' })
                 }
             } else {

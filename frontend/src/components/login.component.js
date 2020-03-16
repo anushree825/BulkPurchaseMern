@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -24,16 +23,6 @@ export default class Login extends Component {
         this.setState({ password: event.target.value });
     }
 
-    // componentDidMount() {
-    //     axios.get('http://localhost:4000/login')
-    //          .then(response => {
-    //              this.setState({users: response.data});
-    //          })
-    //          .catch(function(error) {
-    //              console.log(error);
-    //          })
-    // }
-
     onSubmit(e) {
         e.preventDefault();
 
@@ -42,45 +31,65 @@ export default class Login extends Component {
             password: this.state.password,
         }
 
-        axios.post('http://localhost:4000/login', newUser)
-            //.then(res => console.log(res.data));
-            .then(res => {
-                console.log(res.data)
-                if (res.data === "Error: User does not exist") {
-                    alert("Error: User does not exist")
-                }
-                else {
-                    if (res.data === 'Error: Passwords do not match') {
-                        alert('Error: Incorrect username or password')
-                    }
-                    else {
-                        console.log("Successfully logged in")
-                    }
-                }
-                // if (response.data.role == 'vendor') {
-                //     console.log(response.data.role)
-                //     this.props.history.push('./components/vendor.component')
-                // }
-                // else//(response.data = 'customer')
-                // {
-                //     console.log(response.data.role)
-                //     this.props.history.push('./components/customer.component')
-                // }
-                // localStorage.setItem('usertoken', response.data)
-                // return response.data
-            })
-            .catch(err => {
-                console.log(err.data)
-                // if (err.data === "User does not exist") {
-                //         alert("User does not exist")
-                //     }
-
-            })
+        this.Data(newUser);
+        // //.then(res => console.log(res.data));
+        // .then(res => {
+        //     console.log(res.data)
+        //     if (res.data === "Error: User does not exist") {
+        //         alert("Error: User does not exist")
+        //     }
+        //     else {
+        //         if (res.data === 'Error: Passwords do not match') {
+        //             alert('Error: Incorrect username or password')
+        //         }
+        //         else {
+        //             console.log("Successfully logged in")
+        //         }
+        //     }
+        //     // if (response.data.role == 'vendor') {
+        //     //     console.log(response.data.role)
+        //     //     this.props.history.push('./components/vendor.component')
+        //     // }
+        //     // else//(response.data = 'customer')
+        //     // {
+        //     //     console.log(response.data.role)
+        //     //     this.props.history.push('./components/customer.component')
+        //     // }
+        //     // localStorage.setItem('usertoken', response.data)
+        //     // return response.data
+        // })
+        // .catch(err => {
+        //     console.log(err.data)
+        // })
 
         this.setState({
             username: '',
             password: '',
         });
+    }
+    async Data(newUser) {
+        try {
+            const res = await axios.post('http://localhost:4000/login', newUser)
+            console.log(res.data)
+            if (res.data === "Error: User does not exist") {
+                alert("Error: User does not exist")
+            }
+            else {
+                if (res.data === 'Error: Passwords do not match') {
+                    alert('Error: Incorrect username or password')
+                }
+                else {
+                    console.log("Successfully logged in")
+                    if(res.data === "customer")
+                    this.props.history.push('/customer');
+                    else if(res.data === "vendor")
+                    this.props.history.push('/vendor');
+                }
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
     render() {
