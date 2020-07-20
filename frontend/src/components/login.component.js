@@ -84,16 +84,18 @@ export default class Login extends Component {
                 }
                 else {
                     console.log("Successfully logged in")
-                    if (res.data === "customer") {
+                    localStorage.setItem('user', res.data.user);
+                    localStorage.setItem('role', res.data.role);
+                    if (localStorage.getItem('role') === "customer") {
                         ReactDOM.render(< Customer />, document.getElementById('root'));
                         return <Redirect to="/Customer" />
                     }
-                    else if (res.data === "vendor") {
+                    else if (localStorage.getItem('role') === "vendor") {
                         ReactDOM.render(< Vendor />, document.getElementById('root'));
                         return <Redirect to="/Vendor" />
                     }
                 }
-        
+
             }
         }
         catch (error) {

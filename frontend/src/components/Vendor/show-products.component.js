@@ -20,7 +20,6 @@ export default class ProductList extends Component {
         axios.post('http://localhost:4000/product/delete', del)
             .then(res => {
                 console.log("Product Removed");
-                
             })
             .catch(function (error) {
                 console.log(error);

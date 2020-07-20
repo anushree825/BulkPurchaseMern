@@ -31,8 +31,8 @@ connection.once('open', function () {
 // API endpoints
 
 // Getting all the products
-userRoutes.route('/product/view').get(function(req, res) {
-    Product.find(function(err, product) {
+userRoutes.route('/product/view').get(function (req, res) {
+    Product.find(function (err, product) {
         if (err) {
             console.log(err);
         } else {
@@ -50,7 +50,7 @@ userRoutes.route('/product/delete').post(function (req, res) {
         res.status(200)
     )
         .catch(err => {
-            res.status(400).send('Error'+err);
+            res.status(400).send('Error' + err);
         })
 });
 
@@ -140,7 +140,7 @@ userRoutes.route('/login').post((req, res) => {
                         expiresIn: 1440
                     })
                     console.log("Successfully logged in")
-                    res.cookie('token', token, { httpOnly: true }).status(200).send(user.role);  //res.send(token)
+                    res.cookie('token', token, { httpOnly: true }).status(200).json({ 'user': user.username, 'role': user.role });  //res.send(token)
                 } else {
                     res.send('Error: Passwords do not match')//status(900).json({ error: 'Passwords do not match' })
                 }

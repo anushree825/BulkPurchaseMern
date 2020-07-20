@@ -7,14 +7,14 @@ import OrderList from './components/Vendor/show-orders.component'
 import ShowAll from './components/Vendor/show-all.component'
 import DispatchedList from './components/Vendor/view-dispatched.component'
 
-function onlogout(){
-  // localStorage.setItem('user','');
-  // localStorage.setItem('type','');
+function onlogout() {
+  localStorage.setItem('user', '');
+  localStorage.setItem('role', '');
   window.location.replace('/');
 }
 function Vendor() {
-  return(
-  <Router>
+  return (
+    <Router>
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <Link to="/Vendor" className="navbar-brand">Vendor</Link>
@@ -41,12 +41,12 @@ function Vendor() {
           </div>
         </nav>
 
-        <br/>
-        <Route path="/Vendor/Create-product" exact component={CreateProduct}/>
-        <Route path="/Vendor/View-product" component={ProductList}/>
-        <Route path="/Vendor/View-order" component={OrderList}/>
-        <Route path="/Vendor" exact component={ShowAll}/>
-        <Route path="/Vendor/View-Dispatched" exact component={DispatchedList}/>
+        <br />
+        <Route path="/Vendor/Create-product" exact component={CreateProduct} />
+        <Route path="/Vendor/View-product" component={ProductList} />
+        <Route path="/Vendor/View-order" component={OrderList} />
+        <Route path="/Vendor" exact component={ShowAll} />
+        <Route path="/Vendor/View-Dispatched" exact component={DispatchedList} />
       </div>
     </Router>
   );
