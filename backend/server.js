@@ -25,6 +25,8 @@ connection.once('open', function () {
         console.log(err);
     })
 
+
+
 // API endpoints
 
 // Getting all the users

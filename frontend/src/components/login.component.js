@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import ReactDOM from 'react-dom';
+import Vendor from '../Vendor';
+import Customer from '../Customer';
+import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
     constructor(props) {
@@ -80,11 +84,16 @@ export default class Login extends Component {
                 }
                 else {
                     console.log("Successfully logged in")
-                    if(res.data === "customer")
-                    this.props.history.push('/customer');
-                    else if(res.data === "vendor")
-                    this.props.history.push('/vendor');
+                    if (res.data === "customer") {
+                        ReactDOM.render(< Customer />, document.getElementById('root'));
+                        return <Redirect to="/Customer" />
+                    }
+                    else if (res.data === "vendor") {
+                        ReactDOM.render(< Vendor />, document.getElementById('root'));
+                        return <Redirect to="/Vendor" />
+                    }
                 }
+        
             }
         }
         catch (error) {

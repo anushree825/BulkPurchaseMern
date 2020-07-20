@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-export default class Vendor extends Component {
+export default class UsersList extends Component {
     
     constructor(props) {
         super(props);
@@ -21,25 +21,30 @@ export default class Vendor extends Component {
     render() {
         return (
             <div>
-                <h1>vendor</h1>
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>Username</th>
-                            <th>Email</th>
-                            <th>Password</th>
+                            <th>Average Ratings</th>
+                            <th>reviews</th>
                         </tr>
                     </thead>
                     <tbody>
                     { 
-                        //this.state.users.map((currentUser, i) => {
-                            //return (
+                        this.state.users.map((currentUser, i) => {
+                            if(currentUser.type==='Vendor'){
+                                return (
                                 <tr>
                                     <td>{currentUser.username}</td>
-                                    <td>{currentUser.email}</td>
-                                    <td>{currentUser.password}</td>
+                                    <td>{currentUser.rating_sum / currentUser.ratings}</td>
+                                    <tr>{currentUser.review.map((review,i) =>{
+                                        return(
+                                        <td>{review}</td>
+                                        )
+                                    })}</tr>
                                 </tr>
-                            //)
+                                )
+                            }
                         })
                     }
                     </tbody>
