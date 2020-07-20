@@ -11,8 +11,7 @@ import Customer from './Customer'
 
 
 function App() {
-  // if (localStorage.getItem('Role')) 
-  // {
+  // if (localStorage.getItem('Role')) {
   //   if (localStorage.getItem('Role') === 'Vendor') {
   //     ReactDOM.render(<Router> < Vendor /> </Router>, document.getElementById('root'));
   //     return <Redirect to="/Vendor" />
@@ -22,8 +21,7 @@ function App() {
   //     return <Redirect to="/Customer" />
   //   }
 
-  //   else 
-  //   {
+    // else {
       return (
         <Router>
           <div className="container">
@@ -52,6 +50,7 @@ function App() {
         </Router>
       );
     }
+//   }
+// }
 
-
-    export default App;
+export default App;

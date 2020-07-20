@@ -10,6 +10,7 @@ const PORT = 4000;
 const userRoutes = express.Router();
 
 let User = require('./models/user');
+let Product = require('./models/products');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -28,6 +29,43 @@ connection.once('open', function () {
 
 
 // API endpoints
+
+// Getting all the products
+userRoutes.route('/product/view').get(function(req, res) {
+    Product.find(function(err, product) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(product);
+        }
+    });
+});
+
+// Removing a product
+userRoutes.route('/product/delete').post(function (req, res) {
+    let const_id = req.body['id']
+    Product.findByIdAndUpdate(const_id, {
+        $set: { 'status': 'deleted' }
+    }).then(
+        res.status(200)
+    )
+        .catch(err => {
+            res.status(400).send('Error'+err);
+        })
+});
+
+// Adding a new product
+userRoutes.route('/product/add').post(function (req, res) {
+    let prod = new Product(req.body)
+    console.log(prod)
+    Product.create(prod)
+        .then(prod => {
+            res.status(200).json(prod);
+        })
+        .catch(err => {
+            res.status(400).send('Error');
+        });
+});
 
 // Getting all the users
 userRoutes.route('/').get(function (req, res) {

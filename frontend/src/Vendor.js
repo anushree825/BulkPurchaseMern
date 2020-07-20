@@ -8,8 +8,8 @@ import ShowAll from './components/Vendor/show-all.component'
 import DispatchedList from './components/Vendor/view-dispatched.component'
 
 function onlogout(){
-//   localStorage.setItem('user','');
-//   localStorage.setItem('type','');
+  // localStorage.setItem('user','');
+  // localStorage.setItem('type','');
   window.location.replace('/');
 }
 function Vendor() {

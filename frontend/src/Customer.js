@@ -9,8 +9,8 @@ import DispatchedList from './components/Customer/status.component'
 import UserList from './components/Customer/view-vendor.component'
 
 function onlogout(){
-  // localStorage.setItem('user','');
-  // localStorage.setItem('type','');
+  localStorage.setItem('user','');
+  localStorage.setItem('type','');
   window.location.replace('/');
 }
 function Customer() {

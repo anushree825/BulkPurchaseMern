@@ -10,9 +10,9 @@ export default class CreateProduct extends Component {
             name: '',
             price: '',
             quantity: '',
-            ordered:0,
-            status:'waiting',
-            owner:''
+            ordered: 0,
+            status: 'waiting',
+            owner: ''
         }
 
         this.onChangeName = this.onChangeName.bind(this);
@@ -35,72 +35,96 @@ export default class CreateProduct extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        if(this.state.name==='' || this.state.price==='' || this.state.quantity===''){
-            alert("please enter all requeired details");
+
+        if (this.state.name === '' || this.state.price === '' || this.state.quantity === '') {
+            alert("Please enter all required details");
         }
-        else{
+
+        else {
             const newProduct = {
                 name: this.state.name,
-                price: this.state.price / this.state.quantity,
+                price: this.state.price,
                 quantity: this.state.quantity,
                 status: 'waiting',
-                ordered:0,
-                owner:localStorage.getItem('user')
+                ordered: 0,
+                owner: localStorage.getItem('user')
             }
-            axios.post('http://localhost:4000/product/add', newProduct)
-                .then(res => console.log(res.data));
+
+            this.data(newProduct)
+
+            // axios.post('http://localhost:4000/product/add', newProduct)
+            //     .then(res => console.log(res.data));
+
             this.setState({
                 name: '',
                 price: '',
-                ordered:0,
-                status:'waiting',
+                ordered: 0,
+                status: 'waiting',
                 quantity: '',
-                owner:''
+                owner: ''
             });
         }
     }
 
+    async data(newProduct) {
+        try {
+            const res = await axios.post('http://localhost:4000/product/add', newProduct);
+            // console.log(res.data)
+            if (res.data === 'Error') {
+                alert("Error")
+            }
+            else {
+                console.log('New Product Added')
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
     render() {
-        return (  
-            <div class="col-lg">
-            <form onSubmit = { this.onSubmit } class="form-horizontal">
-            <div className = "form-group .form-horizontal" >
-            <label class="control-label col-sm-10 .control-label"  for="name"> Name Of the product: </label> 
-            <div class="col-sm-10">
-                <input type = "text"
-                className = "form-control"
-                placeholder="Enter Name Of The Product"
-                value = { this.state.name }
-                onChange = { this.onChangeName }
-                /> 
-            </div>
-            </div >
-            <div className = "form-group .form-horizontal" >
-            <label class="control-label col-sm-10 .control-label"  for="price"> Price of the Bundle: </label> 
-            <div class="col-sm-10">
-                <input type = "number"
-                className = "form-control"
-                placeholder="Enter price"
-                value = { this.state.price }
-                onChange = { this.onChangePrice }
-                />
-            </div>
-            </div >
-            <div className = "form-group" >
-            <label class="control-label col-sm-10 .control-label"  for="quantity"> Quantity of the Bundle: </label> 
-            <div class="col-sm-10">
-                <input type = "number"
-                className = "form-control"
-                placeholder="Enter quantity"
-                value = { this.state.quantity }
-                onChange = { this.onChangeQuantity }
-                />
-            </div>
-            </div>
-            <div className = "form-group" >
-            <input type = "submit" value = "Create Product" className = "btn btn-primary btn-lg" / >
-            </div>
-            </form>
+        return (
+            <div className="col-lg">
+                <form onSubmit={this.onSubmit} className="form-horizontal">
+                    <div className="form-group .form-horizontal" >
+                        <label className="control-label col-sm-10 .control-label" htmlFor="name"> Name Of the product: </label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                className="form-control"
+                                placeholder="Enter Name Of The Product"
+                                value={this.state.name}
+                                onChange={this.onChangeName}
+                            />
+                        </div>
+                    </div >
+                    <div className="form-group .form-horizontal" >
+                        <label class="control-label col-sm-10 .control-label" htmlFor="price"> Price of the Bundle: </label>
+                        <div class="col-sm-10">
+                            <input type="number"
+                                className="form-control"
+                                placeholder="Enter price"
+                                min="0"
+                                value={this.state.price}
+                                onChange={this.onChangePrice}
+                            />
+                        </div>
+                    </div >
+                    <div className="form-group" >
+                        <label class="control-label col-sm-10 .control-label" htmlFor="quantity"> Quantity of the Bundle: </label>
+                        <div class="col-sm-10">
+                            <input type="number"
+                                className="form-control"
+                                placeholder="Enter quantity"
+                                min="1"
+                                value={this.state.quantity}
+                                onChange={this.onChangeQuantity}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group" >
+                        <input type="submit" value="Create Product" className="btn btn-primary btn-lg" />
+                    </div>
+                </form>
             </div>
         )
     }
