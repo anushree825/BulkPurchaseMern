@@ -35,8 +35,8 @@ export default class CreateUser extends Component {
         this.setState({ role: event.target.value });
     }
 
-    onSubmit(e) {
-        e.preventDefault();
+    onSubmit(event) {
+        event.preventDefault();
 
         const newUser = {
             username: this.state.username,

@@ -115,7 +115,7 @@ export default class CreateProduct extends Component {
                             <input type="number"
                                 className="form-control"
                                 placeholder="Enter quantity"
-                                min="1"
+                                min="0"
                                 value={this.state.quantity}
                                 onChange={this.onChangeQuantity}
                             />

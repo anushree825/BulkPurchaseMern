@@ -86,6 +86,7 @@ export default class Login extends Component {
                     console.log("Successfully logged in")
                     localStorage.setItem('user', res.data.user);
                     localStorage.setItem('role', res.data.role);
+                    console.log (localStorage.getItem('role'))
                     if (localStorage.getItem('role') === "customer") {
                         ReactDOM.render(< Customer />, document.getElementById('root'));
                         return <Redirect to="/Customer" />

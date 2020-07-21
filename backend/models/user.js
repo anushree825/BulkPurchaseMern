@@ -10,8 +10,17 @@ let User = new mongoose.Schema({
     password: {
         type: String, required: true
     },
-    role:{
+    role: {
         type: String, required: true
+    },
+    ratings: {
+        type: Number
+    },
+    rating_sum: {
+        type: Number
+    },
+    review: {
+        type: Array
     }
 });
 

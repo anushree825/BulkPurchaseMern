@@ -11,6 +11,7 @@ const userRoutes = express.Router();
 
 let User = require('./models/user');
 let Product = require('./models/products');
+let Order = require('./models/orders');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -29,6 +30,133 @@ connection.once('open', function () {
 
 
 // API endpoints
+
+// Getting all the products search
+userRoutes.route('/product/search').post(function (req, res) {
+    console.log(req.body)
+    if (req.body['name'] === '') {
+        Product.find(function (err, product) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(product);
+            }
+        });
+    }
+    else {
+        Product.find({ name: req.body['name'] }, function (err, product) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(product);
+            }
+        });
+    }
+});
+userRoutes.route('/product/rating').post(function (req, res) {
+    Product.find().sort({ owner: -1 }).exec(function (err, product) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(product);
+        }
+    });
+});
+userRoutes.route('/product/price').post(function (req, res) {
+    Product.find().sort({ price: -1 }).exec(function (err, product) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(product);
+        }
+    });
+});
+userRoutes.route('/product/quantity').post(function (req, res) {
+    Product.find().sort({ quantity: -1 }).exec(function (err, product) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(product);
+        }
+    });
+});
+
+// Adding a new order
+userRoutes.route('/order/update').post(function (req, res) {
+    let prod = {
+        name: req.body['order'],
+        quantity: req.body['quantity']
+    }
+    Product.findOne({ name: prod.name }, function (err, pro) {
+        if (prod.quantity > pro['quantity']) {
+            res.json({ 'User': 'invalid' })
+        }
+        else {
+            pro['quantity'] -= prod.quantity;
+            pro['ordered'] += prod.quantity;
+            if (pro['quantity'] > 0) {
+                Product.updateOne({ name: prod.name }, { quantity: pro['quantity'], ordered: pro['ordered'] })
+                    .then(
+                        res.json({ 'User': 'Success' })
+                    )
+            }
+            else {
+                Product.updateOne({ name: prod.name }, { quantity: pro['quantity'], status: 'ready', ordered: pro['ordered'] })
+                    .then(
+                        res.json({ 'User': 'Success' })
+                    )
+            }
+        }
+    })
+});
+userRoutes.route('/order/add').post(function (req, res) {
+    let orde = new Order(req.body);
+    Order.create(orde)
+        .then(
+            res.status(200).json(req.body)
+        )
+        .catch(err => {
+            res.status(400).send('Error');
+        })
+});
+
+// Getting all the orders for a particular vendor
+userRoutes.route('/orders/view/cus1').post(function (req, res) {
+    ret = [];
+    const user = req.body['username']
+    Product.find(function (err, product) {
+        for (i in product) {
+            if (product[i].owner === user) {
+                Order.find({ order: product[i].name }, function (err, order) {
+                    console.log(order)
+                    for (j in order) {
+                        ret.push(j);
+                    }
+                })
+            }
+        }
+    })
+        .then(
+            res.status(200).json(ret)
+        )
+});
+// userRoutes.route('/orders/view/cus2').post(function (req, res) {
+//     console.log(ret)
+//     res.status(200).json(ret);
+// });
+
+// Product dispatch
+userRoutes.route('/product/dispatch').post(function (req, res) {
+    let const_id = req.body['id']
+    Product.findByIdAndUpdate(const_id, {
+        $set: { 'status': 'dispatched' }
+    }).then(
+        res.status(200)
+    )
+        .catch(err => {
+            console.log(err);
+        })
+});
 
 // Getting all the products
 userRoutes.route('/product/view').get(function (req, res) {
