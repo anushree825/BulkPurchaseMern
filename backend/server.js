@@ -71,6 +71,7 @@ userRoutes.route('/product/search').post(function (req, res) {
         Product.find(function (err, product) {
             if (err) {
                 console.log(err);
+                res.send('Error');
             } else {
                 res.json(product);
             }
@@ -80,6 +81,7 @@ userRoutes.route('/product/search').post(function (req, res) {
         Product.find({ name: req.body['name'] }, function (err, product) {
             if (err) {
                 console.log(err);
+                res.send('Error');
             } else {
                 res.json(product);
             }
@@ -87,27 +89,30 @@ userRoutes.route('/product/search').post(function (req, res) {
     }
 });
 userRoutes.route('/product/rating').post(function (req, res) {
-    Product.find().sort({ owner: -1 }).exec(function (err, product) {
+    Product.find().sort({ 'owner': -1 }).exec(function (err, product) {
         if (err) {
             console.log(err);
+            res.send('Error');
         } else {
             res.json(product);
         }
     });
 });
 userRoutes.route('/product/price').post(function (req, res) {
-    Product.find().sort({ price: -1 }).exec(function (err, product) {
+    Product.find().sort({ 'price': -1 }).exec(function (err, product) {
         if (err) {
             console.log(err);
+            res.send('Error');
         } else {
             res.json(product);
         }
     });
 });
 userRoutes.route('/product/quantity').post(function (req, res) {
-    Product.find().sort({ quantity: -1 }).exec(function (err, product) {
+    Product.find().sort({ 'quantity': -1 }).exec(function (err, product) {
         if (err) {
             console.log(err);
+            res.send('Error');
         } else {
             res.json(product);
         }
