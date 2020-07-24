@@ -1,59 +1,90 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import {
-    Card , CardHeader ,Button
-  } from 'reactstrap';
+    Card, CardHeader, Button
+} from 'reactstrap';
 
 export default class OrderList extends Component {
-    
+
     constructor(props) {
         super(props);
-        this.state = {products: []}
+        this.state = { 
+            products: [] 
+        }
         this.dispatch = this.dispatch.bind(this);
 
     }
     dispatch(event) {
         // event.preventDefault();
         const del = {
-            id: event.target.value
+            name: event.target.value
         }
-        console.log (del)   
-        axios.post('http://localhost:4000/product/dispatch', del)
-            .then(res => {
-                console.log("Product Removed");
-                window.location.reload('false');
-            })
-            .catch(function (error) {
-                console.log("ohmo");
-            })
-            
-            
+
+        this.dispatchProduct(del)
+        this.dispatchOrder(del)
+
+        window.location.reload('false'); 
+    }
+
+    async dispatchProduct(del) {
+        try {
+            const res = await axios.post('http://localhost:4000/product/dispatch', del);
+            // window.location.reload('false');
+            console.log(res.data)
+            if (res.data === 'Error') {
+                alert("Error")
+            }
+            else {
+                console.log('Product Dispatched')
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    async dispatchOrder(del) {
+        try {
+            const res = await axios.post('http://localhost:4000/orders/dispatch', del)
+            // window.location.reload('false');
+            console.log(res)
+            // if (res.data === '0') {
+            //     alert("Error")
+            // }
+            // else {
+            console.log('Order Dispatched')
+            // }
+        }
+        catch (err) {
+            console.log('Order Dispatched')
+            // console.log(err)
+        }
     }
 
     componentDidMount() {
         axios.get('http://localhost:4000/product/view')
-             .then(response => {
-                 this.setState({products: response.data});
-                 console.log('data received');
-             })
-             .catch(function(error) {
-                 console.log(error);
-             })
+            .then(response => {
+                this.setState({ products: response.data });
+                console.log('data received');
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
-    
+
     render() {
         return (
             <div>
-                { 
-                    this.state.products.map((currentUser, i) => {
-                        if(currentUser['owner']===localStorage.getItem('user') && currentUser['status']==='ready'){
+                {
+                    this.state.products.map((currentProduct, i) => {
+                        if (currentProduct['owner'] === localStorage.getItem('user') && currentProduct['status'] === 'ready') {
                             return (
-                            <Card className="p-3 text-center">
-                                    <CardHeader className="blockquote mb-0">{currentUser.name} x{currentUser.ordered}</CardHeader>
-                                    <CardHeader>Price per unit: {currentUser.price}
-                                    <br/>Status: ready to dispatch
+                                <Card className="p-3 text-center">
+                                    <CardHeader className="blockquote mb-0">{currentProduct.name} x{currentProduct.ordered}</CardHeader>
+                                    <CardHeader>Price per unit: {currentProduct.price}
+                                        <br />Status: Ready To Dispatch
                                     </CardHeader>
-                                    <Button color="info" value={currentUser._id} onClick={this.dispatch}>Dispatch</Button>
+                                    <Button color="info" value={currentProduct.name} onClick={this.dispatch}>Dispatch</Button>
                                 </Card>
                             )
                         }

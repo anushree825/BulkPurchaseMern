@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 let Order = new mongoose.Schema({
-    quantity:{
-        type:Number
-    },
     order:{
         type:String
+    },
+    quantity:{
+        type:Number
     },
     customer:{
         type:String

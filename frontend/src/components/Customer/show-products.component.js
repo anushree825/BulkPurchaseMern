@@ -112,18 +112,18 @@ export default class ProductList extends Component {
                             </Card>
                         )
                     }
-                    // else{
-                    //     return (
-                    //         <Card className="p-3 text-center">
-                    //                 <CardHeader className="blockquote mb-0">{currentUser.name} x{currentUser.quantity}</CardHeader>
-                    //                 <CardHeader>Price per unit: {currentUser.price}
-                    //                 <br/>Status: Cancelled
-                    //                 <br />Vendor: {currentUser.owner}
-                    //                 <br />Orders: {currentUser.ordered}
-                    //                 </CardHeader>
-                    //             </Card>
-                    //         )
-                    // }
+                    else{
+                        return (
+                            <Card className="p-3 text-center">
+                                    <CardHeader className="blockquote mb-0">{currentUser.name} x{currentUser.quantity}</CardHeader>
+                                    <CardHeader>Price per unit: {currentUser.price}
+                                    <br/>Status: Cancelled
+                                    <br />Vendor: {currentUser.owner}
+                                    <br />Orders: {currentUser.ordered}
+                                    </CardHeader>
+                                </Card>
+                            )
+                    }
                 })
                 }
             </div>

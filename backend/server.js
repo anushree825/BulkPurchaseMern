@@ -31,6 +31,39 @@ connection.once('open', function () {
 
 // API endpoints
 
+// Reviewing a user
+userRoutes.route('/user/review').post(function (req, res) {
+    let id = req.body;
+    Product.find({ name: id['order'] }, function (err, product) {
+        console.log(product[0])
+        Order.find({ order: product[0]['name'] }, function (err, order) {
+            console.log(order[0])
+            User.findOne({ username: product[0]['owner'] }, function (err, user) {
+                user['rating_sum'] += order[0]['rating']
+                user['review'].push((order[0]['review']))
+                user['ratings'] += 1
+                User.updateOne({ username: product[0]['owner'] },
+                    { ratings: user['ratings'], rating_sum: user['rating_sum'], review: user['review'] })
+                    .then(
+                        res.status(200)
+                    )
+            })
+        })
+    });
+});
+
+// Getting all the orders
+userRoutes.route('/orders/view').get(function (req, res) {
+    Order.find(function (err, product) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(product);
+            res.json(product);
+        }
+    });
+});
+
 // Getting all the products search
 userRoutes.route('/product/search').post(function (req, res) {
     console.log(req.body)
@@ -147,15 +180,39 @@ userRoutes.route('/orders/view/cus1').post(function (req, res) {
 
 // Product dispatch
 userRoutes.route('/product/dispatch').post(function (req, res) {
-    let const_id = req.body['id']
-    Product.findByIdAndUpdate(const_id, {
-        $set: { 'status': 'dispatched' }
-    }).then(
-        res.status(200)
-    )
-        .catch(err => {
-            console.log(err);
-        })
+    let const_id = req.body['name']
+
+    Product.findOneAndUpdate(
+        { name: const_id },
+        { $set: { status: "dispatched" } },
+        function (err, result) {
+            if (err) {
+                res.send(err);
+            } else {
+                console.log(result);
+                res.send(result);
+            }
+        }
+    );
+});
+
+userRoutes.route('/orders/dispatch').post(function (req, res) {
+    let const_id = req.body['name']
+
+    Order.updateMany(
+        { order: const_id },
+        { $set: { status: "dispatched" } },
+        function (err, result) {
+            if (err) {
+                console.log('Error');
+                // res.send(err)
+            } else {
+                console.log(result);
+                // res.send(result)
+                // res.status(200);
+            }
+        }
+    );
 });
 
 // Getting all the products
@@ -172,14 +229,16 @@ userRoutes.route('/product/view').get(function (req, res) {
 // Removing a product
 userRoutes.route('/product/delete').post(function (req, res) {
     let const_id = req.body['id']
-    Product.findByIdAndUpdate(const_id, {
-        $set: { 'status': 'deleted' }
-    }).then(
-        res.status(200)
-    )
-        .catch(err => {
-            res.status(400).send('Error' + err);
-        })
+    Product.findByIdAndUpdate(const_id,
+        { $set: { status: 'deleted' } },
+        function (err, result) {
+            if (err) {
+                res.send('Error');
+            } else {
+                res.send(result);
+            }
+        }
+    );
 });
 
 // Adding a new product
@@ -214,7 +273,7 @@ userRoutes.route('/add').post((req, res) => {
         email: req.body.email,
         role: req.body.role
     }
-    console.log(userData);
+    console.log(userData)
 
     User.findOne({
         username: req.body.username

@@ -7,9 +7,11 @@ let Product = new mongoose.Schema({
     price:{
         type:Number
     },
-    quantity:{
+    // quantitiy given by vendor
+    quantity:{ 
         type:Number
     },
+    //quantity ordered in an order by a particular customer
     ordered:{
         type:Number
     },
