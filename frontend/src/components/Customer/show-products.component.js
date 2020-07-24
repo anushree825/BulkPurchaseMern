@@ -48,9 +48,9 @@ export default class ProductList extends Component {
         try {
             const res = await axios.post('http://localhost:4000/product/price', search)
             if (res == 'Error')
-                this.setState({ products: res.data })
-            else
                 console.log(res)
+            else
+                this.setState({ products: res.data })
         }
         catch (err) {
             console.log(err)
@@ -139,7 +139,7 @@ export default class ProductList extends Component {
                                 <Card className="p-3 text-center">
                                     <CardHeader className="blockquote mb-0">{currentProduct.name} x{currentProduct.quantity}</CardHeader>
                                     <CardHeader>Price per unit: {currentProduct.price}
-                                        <br />Status: Cancelled
+                                        <br />Status: Canceled
                                     <br />Vendor: {currentProduct.owner}
                                         <br />Ordered: {currentProduct.ordered}
                                     </CardHeader>

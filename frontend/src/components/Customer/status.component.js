@@ -92,14 +92,14 @@ export default class DispatchedList extends Component {
                                 </Card>
                             )
                         }
-                        // else {
-                        //     return (
-                        //         <Card className="p-3 text-center">
-                        //             <CardHeader className="blockquote mb-0">{currentUser.order} x{currentUser.quantity}</CardHeader>
-                        //             <CardHeader>Status: {currentUser.status}</CardHeader>
-                        //         </Card>
-                        //     )
-                        // }
+                        else {
+                            return (
+                                <Card className="p-3 text-center">
+                                    <CardHeader className="blockquote mb-0">{currentUser.order} x{currentUser.quantity}</CardHeader>
+                                    <CardHeader>Status: {currentUser.status}</CardHeader>
+                                </Card>
+                            )
+                        }
                     }
                 })
             }
