@@ -18,20 +18,6 @@ export default class DispatchedList extends Component {
             name: localStorage.getItem('user')
         }
         this.reviewedOrderAccumulate(user)
-        // axios.post('http://localhost:4000/orders/view/cus1',user)
-        //      .then(response => {
-        //          axios.post('http://localhost:4000/orders/view/cus2',user)
-        //             .then(response => {
-        //                 this.setState({orders: response.data});
-        //                 console.log(this.state)
-        //             })
-        //             .catch(function(error) {
-        //                 console.log(error);
-        //      })
-        //      })
-        //      .catch(function(error) {
-        //          console.log(error);
-        //      })
     }
 
     async reviewedOrderAccumulate(user) {

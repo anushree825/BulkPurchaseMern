@@ -60,9 +60,10 @@ export default class PlaceOrder extends Component {
             window.location.reload(false);
             if (res.data['User'] === 'invalid') {
                 alert('Invalid Number Entered');
+                window.location.reload(false);
             }
             else {
-                await axios.post('http://localhost:4000/order/add', newOrder)
+                await axios.post('http://localhost:4000/order/updatePlaced', newOrder)
                 console.log("Order Successfully Placed")
                 window.location.reload(false);
             }
@@ -104,9 +105,9 @@ export default class PlaceOrder extends Component {
         try {
             const res = await axios.post('http://localhost:4000/product/price', search)
             if (res == 'Error')
-                console.log(res)
-            else
                 this.setState({ products: res.data })
+            else
+                console.log(res)
         }
         catch (err) {
             console.log(err)

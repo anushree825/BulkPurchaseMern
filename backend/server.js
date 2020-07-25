@@ -12,6 +12,7 @@ const userRoutes = express.Router();
 let User = require('./models/user');
 let Product = require('./models/products');
 let Order = require('./models/orders');
+const { ReplSet } = require('mongodb');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -32,39 +33,135 @@ connection.once('open', function () {
 // API endpoints
 
 // Reviewing a order
-userRoutes.route('/order/review').post(function (req, res) {
+userRoutes.route('/order/review/').post(function (req, res) {
+    // let const_id = req.body
     let const_id = req.body
-    mongoose.set('useFindAndModify', false);
-    Order.findOneAndUpdate({ order: const_id['order'] }, {
-        $set: { 'rating': const_id['rating'], 'review': const_id['review'], 'status': 'reviewed' }
-    }).then(
-        res.status(200)
-    )
-        .catch(err => {
-            res.status(400).send('Error');
-        })
+    Order.findByIdAndUpdate(const_id['id'],
+        { $set: { 'rating': const_id['rating'], 'review': const_id['review'], 'status': 'reviewed' } },
+        function (err, result) {
+            if (err) {
+                res.send('Error');
+            } else {
+                res.send(result);
+            }
+        }
+    );
 });
 
 
 // Reviewing a user
 userRoutes.route('/user/review').post(function (req, res) {
     let id = req.body;
-    Product.findOne({ name: id['order'] }, function (err, product) {
-        console.log(product)
-        Order.findOne({ order: product['name'] }, function (err, order) {
-            console.log(order)
-            User.findOne({ username: product['owner'] }, function (err, user) {
-                user['rating_sum'] += order['rating']
-                user['review'].push((order['review']))
-                user['ratings'] += 1
-                User.updateOne({ username: product['owner'] },
-                    { ratings: user['ratings'], rating_sum: user['rating_sum'], review: user['review'] })
-                    .then(
-                        res.status(200)
-                    )
+
+    Order.findById(id['id'], function (err, order) {
+        if (err)
+            res.send('Error')
+        else {
+            Product.findOne({ name: order['order'] }, function (err, product) {
+                console.log(product)
+
+                User.findOne({ username: product['owner'] }, function (err, user) {
+                    if (err)
+                        res.send('Error')
+                    else {
+                        console.log('user old')
+                        console.log(user)
+                        // res.send(user)
+                        console.log(user['ratings'])
+                        console.log(user['rating_sum'])
+                        console.log(user['review'])
+                        console.log('user new')
+                        console.log(user['ratings'] + 1)
+                        console.log(user['rating_sum'] + parseInt(id['rating']))
+                        console.log((id['review']))
+
+                        User.updateOne({ username: product['owner'] },
+                            { ratings: user['ratings'] + 1, rating_sum: user['rating_sum'] + parseInt(id['rating']), review: user['review'] + " , " + id['review'] },
+                            function (err, result) {
+                                if (err) {
+                                    res.send(err);
+                                } else {
+                                    // User.findOne({ username: product['owner'] }, function (err, user) {
+                                    //     if (err)
+                                    //         res.send('Error')
+                                    //     else {
+                                    //         console.log('user')
+                                    //         console.log(user)
+                                    //     }
+                                    // })
+                                    console.log(result);
+                                    res.send(result);
+                                }
+                            }
+                            // ,{ new: true }
+                        )
+                    }
+                })
             })
-        })
-    });
+        }
+    })
+
+    // Product.findOne({ name: id['order'] }, function (err, product) {
+    //     console.log(product)
+    //     Order.findOne({ order: product['name'] }, function (err, order) {
+    //         console.log(order)
+    //         User.findOne({ username: product['owner'] }, function (err, user) {
+    //             user['rating_sum'] += order['rating']
+    //             user['review'].push((order['review']))
+    //             user['ratings'] += 1
+    //             User.updateOne({ username: product['owner'] },
+    //                 { ratings: user['ratings'], rating_sum: user['rating_sum'], review: user['review'] })
+    //                 .then(
+    //                     res.status(200)
+    //                 )
+    //         })
+    //     })
+    // });
+});
+
+//Reviewing a product
+userRoutes.route('/product/review').post(function (req, res) {
+    let id = req.body;
+
+    Order.findById(id['id'], function (err, order) {
+        if (err)
+            res.send('Error')
+        else {
+            Product.findOne({ name: order['order'] }, function (err, product) {
+                console.log(product)
+
+                // User.findOne({ username: product['owner'] }, function (err, user) {
+                if (err)
+                    res.send('Error')
+                else {
+                    console.log('product old')
+                    console.log(product)
+                    // res.send(user)
+                    console.log(product['ratings'])
+                    console.log(product['rating_sum'])
+                    console.log(product['review'])
+                    console.log('user new')
+                    console.log(product['ratings'] + 1)
+                    console.log(product['rating_sum'] + parseInt(id['rating']))
+                    console.log((id['review']))
+
+                    Product.updateOne({ name: order['order'] },
+                        { ratings: product['ratings'] + 1, rating_sum: product['rating_sum'] + parseInt(id['rating']), review: product['review'] + " , " + id['review'] },
+                        function (err, result) {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                console.log(result);
+                                res.send(result);
+                            }
+                        }
+                        // ,{ new: true }
+                    )
+                }
+                // })
+            })
+        }
+    })
 });
 
 // Getting all the orders
@@ -73,7 +170,7 @@ userRoutes.route('/orders/view').get(function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            console.log(product);
+            // console.log(product);
             res.json(product);
         }
     });
@@ -104,7 +201,8 @@ userRoutes.route('/product/search').post(function (req, res) {
     }
 });
 userRoutes.route('/product/rating').post(function (req, res) {
-    Product.find().sort({ 'owner': -1 }).exec(function (err, product) {
+
+    Product.find().sort({ 'rating': -1 }).exec(function (err, product) {
         if (err) {
             console.log(err);
             res.send('Error');
@@ -140,11 +238,20 @@ userRoutes.route('/order/update').post(function (req, res) {
         name: req.body['order'],
         quantity: req.body['quantity']
     }
+    let orde = new Order(req.body);
+
     Product.findOne({ name: prod.name }, function (err, pro) {
         if (prod.quantity > pro['quantity']) {
             res.json({ 'User': 'invalid' })
         }
         else {
+            Order.create(orde)
+                .then(
+                    res.status(200)
+                )
+                .catch(err => {
+                    res.status(400).send('Error');
+                })
             pro['quantity'] -= prod.quantity;
             pro['ordered'] += prod.quantity;
             if (pro['quantity'] > 0) {
@@ -162,15 +269,31 @@ userRoutes.route('/order/update').post(function (req, res) {
         }
     })
 });
-userRoutes.route('/order/add').post(function (req, res) {
-    let orde = new Order(req.body);
-    Order.create(orde)
-        .then(
-            res.status(200).json(req.body)
-        )
-        .catch(err => {
-            res.status(400).send('Error');
-        })
+userRoutes.route('/order/updatePlaced').post(function (req, res) {
+    let const_id = req.body['order']
+
+    Product.findOne({ name: const_id }, function (err, product) {
+        if (err)
+            res.send(err)
+        else {
+            if (product['status'] === 'ready') {
+                Order.updateMany(
+                    { order: const_id },
+                    { $set: { status: 'placed' } },
+                    function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            res.send('Error')
+                        } else {
+                            console.log(result);
+                            res.send(result)
+                            // res.status(200);
+                        }
+                    }
+                );
+            }
+        }
+    })
 });
 
 // Getting all the orders for a particular vendor
@@ -311,7 +434,21 @@ userRoutes.route('/product/delete').post(function (req, res) {
             if (err) {
                 res.send('Error');
             } else {
-                res.send(result);
+                Order.updateMany(
+                    { order: result['name'] },
+                    { $set: { status: "canceled" } },
+                    function (err, result2) {
+                        if (err) {
+                            console.log('Error');
+                            // res.send(err)
+                        } else {
+                            console.log(result2);
+                            // res.send(result)
+                            res.status(200);
+                        }
+                    }
+                )
+                res.send(result)
             }
         }
     );
@@ -343,12 +480,7 @@ userRoutes.route('/').get(function (req, res) {
 
 // Adding a new user
 userRoutes.route('/add').post((req, res) => {
-    const userData = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        role: req.body.role
-    }
+    let userData = new User(req.body)
     console.log(userData)
 
     User.findOne({

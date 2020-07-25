@@ -25,7 +25,7 @@ export default class UsersList extends Component {
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th>Username</th>
+                            <th>Vendor</th>
                             <th>Average Ratings</th>
                             <th>reviews</th>
                         </tr>

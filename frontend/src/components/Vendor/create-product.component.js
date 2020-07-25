@@ -12,7 +12,10 @@ export default class CreateProduct extends Component {
             quantity: '',
             ordered: 0,
             status: 'waiting',
-            owner: ''
+            owner: '',
+            ratings: 0,
+            review: [],
+            rating_sum: 0
         }
 
         this.onChangeName = this.onChangeName.bind(this);
@@ -47,7 +50,10 @@ export default class CreateProduct extends Component {
                 quantity: this.state.quantity,
                 status: 'waiting',
                 ordered: 0,
-                owner: localStorage.getItem('user')
+                owner: localStorage.getItem('user'),
+                ratings: 0,
+                review: [],
+                rating_sum: 0
             }
 
             this.data(newProduct)
@@ -61,7 +67,10 @@ export default class CreateProduct extends Component {
                 ordered: 0,
                 status: 'waiting',
                 quantity: '',
-                owner: ''
+                owner: '',
+                ratings: 0,
+                review: [],
+                rating_sum: 0
             });
         }
     }

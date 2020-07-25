@@ -10,7 +10,10 @@ export default class CreateUser extends Component {
             username: '',
             email: '',
             password: '',
-            role: ''
+            role: '',
+            ratings:0,
+            review:[],
+            rating_sum:0
         }
 
         this.onChangeUsername = this.onChangeUsername.bind(this);
@@ -42,7 +45,10 @@ export default class CreateUser extends Component {
             username: this.state.username,
             email: this.state.email,
             password: this.state.password,
-            role: this.state.role
+            role: this.state.role,
+            ratings:0,
+            review:[],
+            rating_sum:0
         }
 
         this.data(newUser)
@@ -71,7 +77,10 @@ export default class CreateUser extends Component {
             username: '',
             email: '',
             password: '',
-            role: ''
+            role: '',
+            ratings:0,
+            review:[],
+            rating_sum:0
         });
     }
     async data(newUser) {
