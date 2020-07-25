@@ -17,56 +17,44 @@ export default class DispatchedList extends Component {
         const user = {
             name: localStorage.getItem('user')
         }
-        axios.post('http://localhost:4000/orders/view/cus1',user)
-             .then(response => {
-                 axios.post('http://localhost:4000/orders/view/cus2',user)
-                    .then(response => {
-                        this.setState({orders: response.data});
-                        console.log(this.state)
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-             })
-             })
-             .catch(function(error) {
-                 console.log(error);
-             })
+        this.reviewedOrderAccumulate(user)
+        // axios.post('http://localhost:4000/orders/view/cus1',user)
+        //      .then(response => {
+        //          axios.post('http://localhost:4000/orders/view/cus2',user)
+        //             .then(response => {
+        //                 this.setState({orders: response.data});
+        //                 console.log(this.state)
+        //             })
+        //             .catch(function(error) {
+        //                 console.log(error);
+        //      })
+        //      })
+        //      .catch(function(error) {
+        //          console.log(error);
+        //      })
     }
 
-    // componentDidMount() {
-    //     const user = {
-    //         id: localStorage.getItem('user')
-    //     }
-    //     // console.log(localStorage.getItem('user'))
-    //     // this.reviewedOrders(user)
-    //     // axios.post('http://localhost:4000/reviewedOrders',user)
-    //     //     .then(response => {
-    //     //         console.log(response.data)
-    //     //         this.setState({ orders: response.data })
-    //     //     })
-    //     //     .catch(function (error) {
-    //     //         console.log(error)
-    //     //     })
-    // }
-
-    // async reviewedOrders(user) {
-    //     try {
-    //         const res = await axios.post('http://localhost:4000/reviewedOrders', user)
-    //         console.log(res.data)
-    //         if (res.data == 'Error')
-    //         console.log('couldnt extract info')
-    //         else{
-    //             this.res.data.map((currentProd, i) => {
-    //                 const res1 = axios.post('http://localhost:4000/reviewedOrders1', currentProd)
-    //                 console.log(res1.data)
-    //             });
-    //         }
-    //     }
-    //     catch (err) {
-    //         console.log('FrontEndProb')
-    //         console.log(err)
-    //     }
-    // }
+    async reviewedOrderAccumulate(user) {
+        try {
+            const res = await axios.post('http://localhost:4000/reviewedOrderAccumulate',user)
+            console.log(res.data)
+            if (res.data == 'Error')
+            console.log('couldnt extract info')
+            else{
+                const res1 = await axios.post('http://localhost:4000/reviewedOrderRetrieval',user)
+                if (res1.data==='Error')
+                console.log(res1.data)
+                else{
+                    this.setState({orders: res1.data});
+                        console.log(this.state)
+                }
+            }
+        }
+        catch (err) {
+            console.log('FrontEndProb')
+            console.log(err)
+        }
+    }
 
     render() {
         return (

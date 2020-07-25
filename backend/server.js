@@ -217,25 +217,34 @@ userRoutes.route('/order/add').post(function (req, res) {
 
 // });
 
-userRoutes.route('/orders/view/cus1').post(function(req, res) {
+userRoutes.route('/reviewedOrderAccumulate').post(function (req, res) {
     ret = [];
     const user = req.body['name']
-    Product.find({owner: user},function(err,product){
-        for( i in product){
-            // if(product[i].owner===user){
-                Order.find({order:product[i].name},function(err,order){
-                    for(j in order){
-                        if (order[j].status==='reviewed')
-                        adding(ret,order[j]);
+    Product.find({ owner: user }, function (err, product) {
+        if (err)
+            res.send('Error')
+        else {
+            for (i in product) {
+                // if(product[i].owner===user){
+                Order.find({ order: product[i].name }, function (err, order) {
+                    if (err)
+                        res.send('Error')
+                    else {
+                        for (j in order) {
+                            if (order[j].status === 'reviewed')
+                                adding(ret, order[j]);
+                        }
                     }
                 })
-            // }
+                // }
+            }
         }
+
     }).then(
         res.status(200).json(ret)
     )
 });
-userRoutes.route('/orders/view/cus2').post(function(req, res) {
+userRoutes.route('/reviewedOrderRetrieval').post(function (req, res) {
     console.log(ret)
     res.status(200).json(ret);
 });
