@@ -202,7 +202,7 @@ userRoutes.route('/product/search').post(function (req, res) {
 });
 userRoutes.route('/product/rating').post(function (req, res) {
 
-    Product.find().sort({ 'rating': -1 }).exec(function (err, product) {
+    Product.find().sort({ 'owner': -1 }).exec(function (err, product) {
         if (err) {
             console.log(err);
             res.send('Error');

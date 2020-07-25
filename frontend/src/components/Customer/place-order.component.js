@@ -105,9 +105,10 @@ export default class PlaceOrder extends Component {
         try {
             const res = await axios.post('http://localhost:4000/product/price', search)
             if (res == 'Error')
-                this.setState({ products: res.data })
-            else
                 console.log(res)
+
+            else
+                this.setState({ products: res.data })
         }
         catch (err) {
             console.log(err)
