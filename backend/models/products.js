@@ -23,4 +23,4 @@ let Product = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Product', Product);
+module.exports = mongoose.model('Product', Product);    

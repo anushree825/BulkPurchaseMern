@@ -38,11 +38,11 @@ export default class UsersList extends Component {
                                         <tr>
                                             <td>{currentUser.username}</td>
                                             <td>{currentUser.rating_sum / currentUser.ratings}</td>
-                                            {/* <tr>{currentUser.review.map((review, i) => {
+                                            <tr>{currentUser.review.map((review, i) => {
                                                 return (
                                                     <td>{review}</td>
                                                 )
-                                            })}</tr> */}
+                                            })}</tr>
                                         </tr>
                                     )
                                 }

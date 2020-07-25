@@ -7,9 +7,6 @@ let Order = new mongoose.Schema({
     quantity:{
         type:Number
     },
-    left:{
-        type:Number
-    },
     customer:{
         type:String
     },

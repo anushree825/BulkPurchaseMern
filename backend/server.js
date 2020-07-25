@@ -31,16 +31,31 @@ connection.once('open', function () {
 
 // API endpoints
 
+// Reviewing a order
+userRoutes.route('/order/review').post(function (req, res) {
+    let const_id = req.body
+    mongoose.set('useFindAndModify', false);
+    Order.findOneAndUpdate({ order: const_id['order'] }, {
+        $set: { 'rating': const_id['rating'], 'review': const_id['review'], 'status': 'reviewed' }
+    }).then(
+        res.status(200)
+    )
+        .catch(err => {
+            res.status(400).send('Error');
+        })
+});
+
+
 // Reviewing a user
 userRoutes.route('/user/review').post(function (req, res) {
     let id = req.body;
-    Product.find({ name: id['order'] }, function (err, product) {
-        console.log(product[0])
-        Order.find({ order: product[0]['name'] }, function (err, order) {
-            console.log(order[0])
-            User.findOne({ username: product[0]['owner'] }, function (err, user) {
-                user['rating_sum'] += order[0]['rating']
-                user['review'].push((order[0]['review']))
+    Product.findOne({ name: id['order'] }, function (err, product) {
+        console.log(product)
+        Order.findOne({ order: product['name'] }, function (err, order) {
+            console.log(order)
+            User.findOne({ username: product['owner'] }, function (err, user) {
+                user['rating_sum'] += order['rating']
+                user['review'].push((order['review']))
                 user['ratings'] += 1
                 User.updateOne({ username: product[0]['owner'] },
                     { ratings: user['ratings'], rating_sum: user['rating_sum'], review: user['review'] })
@@ -159,29 +174,76 @@ userRoutes.route('/order/add').post(function (req, res) {
 });
 
 // Getting all the orders for a particular vendor
-userRoutes.route('/orders/view/cus1').post(function (req, res) {
+
+// userRoutes.route('/reviewedOrders').post(function (req, res) {
+//     let name = req.body['id']
+//     Product.find({ owner: name }, function (err, product) {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             // console.log(product);
+//             res.json(product)
+//             // product.forEach(item => {
+//             //     Order.find({ order: item['name'] }, function (err, order) {
+//             //         if (err) {
+//             //             console.log(err)
+//             //         } else {
+//             //             // console.log(order)
+//             //             // order.forEach(element => {
+//             //             //     if (element['status'] === 'reviewed') {
+//             //             //         global.ret.push(element);
+//             //             //         global.ret.save();
+//             //             //     }
+//             //             // })
+//             //             res.json(order)
+//             //         }
+//             //     })
+//             // })
+//         }
+//         // console.log();
+//     })
+
+// });
+// userRoutes.route('/reviewedOrders1').post(function (req, res) {
+//     let name = req.body['name']
+
+//     Order.find({ order: name }, function (err, order) {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             res.json(order)
+//         }
+//     })
+
+// });
+
+userRoutes.route('/orders/view/cus1').post(function(req, res) {
     ret = [];
-    const user = req.body['username']
-    Product.find(function (err, product) {
-        for (i in product) {
-            if (product[i].owner === user) {
-                Order.find({ order: product[i].name }, function (err, order) {
-                    console.log(order)
-                    for (j in order) {
-                        ret.push(j);
+    const user = req.body['name']
+    Product.find({owner: user},function(err,product){
+        for( i in product){
+            // if(product[i].owner===user){
+                Order.find({order:product[i].name},function(err,order){
+                    for(j in order){
+                        if (order[j].status==='reviewed')
+                        adding(ret,order[j]);
                     }
                 })
-            }
+            // }
         }
-    })
-        .then(
-            res.status(200).json(ret)
-        )
+    }).then(
+        res.status(200).json(ret)
+    )
 });
-// userRoutes.route('/orders/view/cus2').post(function (req, res) {
-//     console.log(ret)
-//     res.status(200).json(ret);
-// });
+userRoutes.route('/orders/view/cus2').post(function(req, res) {
+    console.log(ret)
+    res.status(200).json(ret);
+});
+
+function adding(ret, data) {
+    ret.push(data);
+    return ret;
+}
 
 // Product dispatch
 userRoutes.route('/product/dispatch').post(function (req, res) {
