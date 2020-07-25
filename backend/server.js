@@ -57,7 +57,7 @@ userRoutes.route('/user/review').post(function (req, res) {
                 user['rating_sum'] += order['rating']
                 user['review'].push((order['review']))
                 user['ratings'] += 1
-                User.updateOne({ username: product[0]['owner'] },
+                User.updateOne({ username: product['owner'] },
                     { ratings: user['ratings'], rating_sum: user['rating_sum'], review: user['review'] })
                     .then(
                         res.status(200)
